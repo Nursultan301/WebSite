@@ -31,7 +31,10 @@ def detail(request, pk):
 
 
 def about(request):
-    context = {"title": "О нас"}
+    context = {
+        "title": "О нас",
+        "menu": menu
+    }
     return render(request, 'women/about.html', context=context)
 
 

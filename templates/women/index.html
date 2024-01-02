@@ -1,21 +1,8 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title> {{ title }} </title>
-</head>
-<body>
-    <ul>
-        {% for m in menu %}
-            {% if not forloop.last %}<li> {% else %} <li class="last"> {% endif %}
-                <a href="{% url m.url_name %}">{{ m.title }}</a>
-            </li>
-        {% endfor %}
-    </ul>
+{% extends "base.html" %}
+{% block title %} {{ title }} {% endblock %}
+{% block content %}
     <h1> {{ title }} </h1>
+    {% include 'women/includes/nav.html' %}
     {% for item in posts %}
         {% if item.is_published %}
             <h1>{{ item.id }}</h1>
@@ -26,5 +13,6 @@
             {% endif %}
         {% endif %}
     {% endfor %}
-</body>
-</html>
+    {% include 'women/includes/nav.html' %}
+
+{% endblock %}
