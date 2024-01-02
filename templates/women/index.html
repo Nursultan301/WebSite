@@ -13,6 +13,7 @@
         {% if item.is_published %}
             <h1>{{ item.id }}</h1>
             <h4>{{ item.title }}</h4>
+            <p><a href="{% url "detail" item.id %}">Читать пост</a></p>
             {% if not forloop.last %}
                 <hr>
             {% endif %}
