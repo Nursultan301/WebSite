@@ -9,11 +9,18 @@ menu = [
     {"title": "Войти", "url_name": 'login'},
 ]
 
-db_data = [
-    {"id": 1, "title": "Новость1", "is_published": True},
-    {"id": 2, "title": "Новость2", "is_published": True},
-    {"id": 3, "title": "Новость3", "is_published": False},
-    {"id": 4, "title": "Новость4", "is_published": True}
+data_db = [
+    {'id': 1, 'title': 'Анджелина Джоли', 'content': '''Анджелина Джоли (англ. Angelina Jolie[7], при рождении Войт (англ. Voight), ранее Джоли Питт (англ. Jolie Pitt); род. 4 июня 1975, Лос-Анджелес, Калифорния, США) — американская актриса кино, телевидения и озвучивания, кинорежиссёр, сценаристка, продюсер, фотомодель, посол доброй воли ООН.
+    Обладательница премии «Оскар», трёх премий «Золотой глобус» (первая актриса в истории, три года подряд выигравшая премию) и двух «Премий Гильдии киноактёров США».''',
+     'is_published': True},
+    {'id': 2, 'title': 'Марго Робби', 'content': 'Биография Марго Робби', 'is_published': False},
+    {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
+]
+
+cats_db = [
+    {"id": 1, "name": "Актрисы"},
+    {"id": 2, "name": "Певицы"},
+    {"id": 3, "name": "Спортсменки"},
 ]
 
 
@@ -21,7 +28,7 @@ def index(request):
     context = {
         "title": "Главная страница",
         "menu": menu,
-        "posts": db_data
+        "posts": data_db,
     }
     return render(request, 'women/index.html', context=context)
 
@@ -48,3 +55,13 @@ def contact(request):
 
 def login(request):
     return HttpResponse('Авторизация')
+
+
+def category(request, pk):
+    context = {
+        "title": "Отображение по рубрикам",
+        "menu": menu,
+        "posts": data_db,
+        "cat_selected": pk,
+    }
+    return render(request, 'women/index.html', context=context)
