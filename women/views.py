@@ -17,12 +17,18 @@ data_db = [
     {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
 ]
 
+cats_db = [
+    {"id": 1, "name": "Актрисы"},
+    {"id": 2, "name": "Певицы"},
+    {"id": 3, "name": "Спортсменки"},
+]
+
 
 def index(request):
     context = {
         "title": "Главная страница",
         "menu": menu,
-        "posts": data_db
+        "posts": data_db,
     }
     return render(request, 'women/index.html', context=context)
 
@@ -49,3 +55,13 @@ def contact(request):
 
 def login(request):
     return HttpResponse('Авторизация')
+
+
+def category(request, pk):
+    context = {
+        "title": "Отображение по рубрикам",
+        "menu": menu,
+        "posts": data_db,
+        "cat_selected": pk,
+    }
+    return render(request, 'women/index.html', context=context)
