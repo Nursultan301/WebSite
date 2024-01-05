@@ -1,5 +1,7 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+
+from women.models import Women
 
 menu = [
     {"title": "Главная страница", "url_name": 'home'},
@@ -7,14 +9,6 @@ menu = [
     {"title": "Добавление статью", "url_name": 'add_page'},
     {"title": "Обратная связь", "url_name": 'contact'},
     {"title": "Войти", "url_name": 'login'},
-]
-
-data_db = [
-    {'id': 1, 'title': 'Анджелина Джоли', 'content': '''Анджелина Джоли (англ. Angelina Jolie[7], при рождении Войт (англ. Voight), ранее Джоли Питт (англ. Jolie Pitt); род. 4 июня 1975, Лос-Анджелес, Калифорния, США) — американская актриса кино, телевидения и озвучивания, кинорежиссёр, сценаристка, продюсер, фотомодель, посол доброй воли ООН.
-    Обладательница премии «Оскар», трёх премий «Золотой глобус» (первая актриса в истории, три года подряд выигравшая премию) и двух «Премий Гильдии киноактёров США».''',
-     'is_published': True},
-    {'id': 2, 'title': 'Марго Робби', 'content': 'Биография Марго Робби', 'is_published': False},
-    {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
 ]
 
 cats_db = [
@@ -25,16 +19,25 @@ cats_db = [
 
 
 def index(request):
+    posts = Women.objects.filter(is_published=True)
     context = {
         "title": "Главная страница",
         "menu": menu,
-        "posts": data_db,
+        "posts": posts,
     }
     return render(request, 'women/index.html', context=context)
 
 
-def detail(request, pk):
-    return HttpResponse(f'Отображение статьи с id = {pk}')
+def detail(request, slug):
+    post = get_object_or_404(Women, slug=slug)
+    data = {
+        "title": post.title,
+        "menu:": menu,
+        "post": post,
+        "cat_selected": 1
+
+    }
+    return render(request, 'women/detail.html', data)
 
 
 def about(request):

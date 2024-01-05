@@ -4,7 +4,7 @@ from women import views
 
 urlpatterns = [
     path('', views.index, name='home'),
-    path('detail/<int:pk>/', views.detail, name='detail'),
+    path('detail/<slug:slug>/', views.detail, name='detail'),
     path('about/', views.about, name='about'),
     path('addpage/', views.addpage, name='add_page'),
     path('contact/', views.contact, name='contact'),
