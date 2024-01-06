@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 
-from women.models import Women
+from women.models import Women, Category
 
 menu = [
     {"title": "Главная страница", "url_name": 'home'},
@@ -60,11 +60,14 @@ def login(request):
     return HttpResponse('Авторизация')
 
 
-def category(request, pk):
+def category(request, cat_slug):
+    cat = get_object_or_404(Category, slug=cat_slug)
+    print(cat.pk)
+    posts = Women.published.filter(category_id=cat.pk)
     context = {
-        "title": "Отображение по рубрикам",
+        "title": f"Рубрика: {cat.title}",
         "menu": menu,
-        "posts": data_db,
-        "cat_selected": pk,
+        "posts": posts,
+        "cat_selected": cat.pk,
     }
     return render(request, 'women/index.html', context=context)

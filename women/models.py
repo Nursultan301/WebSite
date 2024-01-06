@@ -17,8 +17,8 @@ class Women(models.Model):
     content = models.TextField(blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)
-    is_published = models.BooleanField(choices=Status.choices, default=Status.DRAFT)
-    category = models.ForeignKey('Category', on_delete=models.PROTECT)
+    is_published = models.BooleanField(choices=Status.choices, default=Status.PUBLISHED)
+    category = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='posts')
 
     objects = models.Manager()
     published = PublishedManager()
@@ -50,3 +50,6 @@ class Category(models.Model):
         ordering = ('title', )
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
+
+    def get_absolute_url(self):
+        return reverse('category', kwargs={'cat_slug': self.slug})
