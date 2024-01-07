@@ -48,7 +48,7 @@ class Category(models.Model):
         return self.title
 
     class Meta:
-        ordering = ('title', )
+        ordering = ('title',)
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
@@ -62,6 +62,9 @@ class TagPost(models.Model):
 
     def __str__(self):
         return self.tag
+
+    def get_absolute_url(self):
+        return reverse('tag', kwargs={'tag_slug': self.slug})
 
     class Meta:
         verbose_name = 'Тег'
