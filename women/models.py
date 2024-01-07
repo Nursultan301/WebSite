@@ -20,6 +20,7 @@ class Women(models.Model):
     is_published = models.BooleanField(choices=Status.choices, default=Status.PUBLISHED)
     category = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='posts')
     tags = models.ManyToManyField('TagPost', blank=True, related_name='tags')
+    husband = models.OneToOneField('Husband', on_delete=models.SET_NULL, null=True, blank=True, related_name='men')
 
     objects = models.Manager()
     published = PublishedManager()
@@ -69,3 +70,12 @@ class TagPost(models.Model):
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
+
+
+class Husband(models.Model):
+    name = models.CharField(max_length=100)
+    age = models.PositiveSmallIntegerField(null=True)
+
+    def __str__(self):
+        return self.name
+
