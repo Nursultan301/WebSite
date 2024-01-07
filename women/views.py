@@ -62,8 +62,8 @@ def login(request):
 
 def category(request, cat_slug):
     cat = get_object_or_404(Category, slug=cat_slug)
-    print(cat.pk)
     posts = Women.published.filter(category_id=cat.pk)
+    print(posts)
     context = {
         "title": f"Рубрика: {cat.title}",
         "menu": menu,
