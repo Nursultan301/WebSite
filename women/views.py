@@ -11,15 +11,9 @@ menu = [
     {"title": "Войти", "url_name": 'login'},
 ]
 
-cats_db = [
-    {"id": 1, "name": "Актрисы"},
-    {"id": 2, "name": "Певицы"},
-    {"id": 3, "name": "Спортсменки"},
-]
-
 
 def index(request):
-    posts = Women.published.all()
+    posts = Women.published.all().select_related("category")
     context = {
         "title": "Главная страница",
         "menu": menu,
@@ -64,7 +58,7 @@ def login(request):
 
 def category(request, cat_slug):
     cat = get_object_or_404(Category, slug=cat_slug)
-    posts = Women.published.filter(category_id=cat.pk)
+    posts = Women.published.filter(category_id=cat.pk).select_related("category")
     context = {
         "title": f"Рубрика: {cat.title}",
         "menu": menu,
@@ -76,7 +70,7 @@ def category(request, cat_slug):
 
 def show_tag_post_list(request, tag_slug):
     tag = get_object_or_404(TagPost, slug=tag_slug)
-    posts = tag.tags.filter(is_published=Women.Status.PUBLISHED)
+    posts = tag.tags.filter(is_published=Women.Status.PUBLISHED).select_related("category")
 
     data = {
         'title': f'Тег: {tag.tag}',
