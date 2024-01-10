@@ -9,7 +9,7 @@ register = template.Library()
 
 @register.inclusion_tag('women/list_categories.html')
 def show_categories(cat_selected=0):
-    cats = Category.objects.annotate(total=Count('posts')).filter(total__gt=0)
+    cats = Category.objects.annotate(total=Count('posts')).filter(total__gt=0, posts__is_published__gt=0)
     return {"cats": cats, "cat_selected": cat_selected}
 
 
