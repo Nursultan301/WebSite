@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 
+from women.forms import AddPostForm
 from women.models import Women, Category, TagPost
 
 menu = [
@@ -45,7 +46,18 @@ def about(request):
 
 
 def addpage(request):
-    return HttpResponse('Добавление статьи')
+    if request.POST:
+        form = AddPostForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+    else:
+        form = AddPostForm()
+    data = {
+        "menu": menu,
+        "title": "Добавление статьи",
+        "form": form
+    }
+    return render(request, 'women/add_page.html', context=data)
 
 
 def contact(request):
