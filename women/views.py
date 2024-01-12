@@ -49,7 +49,7 @@ def addpage(request):
     if request.POST:
         form = AddPostForm(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
+            pass
     else:
         form = AddPostForm()
     data = {
