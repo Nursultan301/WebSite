@@ -1,5 +1,8 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+
+from women.forms import AddPostForm
+from women.models import Women, Category, TagPost
 
 menu = [
     {"title": "Главная страница", "url_name": 'home'},
@@ -9,32 +12,29 @@ menu = [
     {"title": "Войти", "url_name": 'login'},
 ]
 
-data_db = [
-    {'id': 1, 'title': 'Анджелина Джоли', 'content': '''Анджелина Джоли (англ. Angelina Jolie[7], при рождении Войт (англ. Voight), ранее Джоли Питт (англ. Jolie Pitt); род. 4 июня 1975, Лос-Анджелес, Калифорния, США) — американская актриса кино, телевидения и озвучивания, кинорежиссёр, сценаристка, продюсер, фотомодель, посол доброй воли ООН.
-    Обладательница премии «Оскар», трёх премий «Золотой глобус» (первая актриса в истории, три года подряд выигравшая премию) и двух «Премий Гильдии киноактёров США».''',
-     'is_published': True},
-    {'id': 2, 'title': 'Марго Робби', 'content': 'Биография Марго Робби', 'is_published': False},
-    {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
-]
-
-cats_db = [
-    {"id": 1, "name": "Актрисы"},
-    {"id": 2, "name": "Певицы"},
-    {"id": 3, "name": "Спортсменки"},
-]
-
 
 def index(request):
+    posts = Women.published.all().select_related("category")
     context = {
         "title": "Главная страница",
         "menu": menu,
-        "posts": data_db,
+        "posts": posts,
+        "cat_selected": 0,
     }
     return render(request, 'women/index.html', context=context)
 
 
-def detail(request, pk):
-    return HttpResponse(f'Отображение статьи с id = {pk}')
+def detail(request, slug):
+    post = get_object_or_404(Women, slug=slug)
+    print(post.category_id)
+    data = {
+        "title": post.title,
+        "menu:": menu,
+        "post": post,
+        "cat_selected": post.category_id
+
+    }
+    return render(request, 'women/detail.html', data)
 
 
 def about(request):
@@ -46,7 +46,24 @@ def about(request):
 
 
 def addpage(request):
-    return HttpResponse('Добавление статьи')
+    if request.POST:
+        form = AddPostForm(request.POST)
+        if form.is_valid():
+            # print(form.cleaned_data)
+            try:
+                Women.objects.create(**form.cleaned_data)
+                return redirect("home")
+            except:
+                form.add_error(None, 'Ошибка добавления поста')
+
+    else:
+        form = AddPostForm()
+    data = {
+        "menu": menu,
+        "title": "Добавление статьи",
+        "form": form
+    }
+    return render(request, 'women/add_page.html', context=data)
 
 
 def contact(request):
@@ -57,11 +74,26 @@ def login(request):
     return HttpResponse('Авторизация')
 
 
-def category(request, pk):
+def category(request, cat_slug):
+    cat = get_object_or_404(Category, slug=cat_slug)
+    posts = Women.published.filter(category_id=cat.pk).select_related("category")
     context = {
-        "title": "Отображение по рубрикам",
+        "title": f"Рубрика: {cat.title}",
         "menu": menu,
-        "posts": data_db,
-        "cat_selected": pk,
+        "posts": posts,
+        "cat_selected": cat.pk,
     }
     return render(request, 'women/index.html', context=context)
+
+
+def show_tag_post_list(request, tag_slug):
+    tag = get_object_or_404(TagPost, slug=tag_slug)
+    posts = tag.tags.filter(is_published=Women.Status.PUBLISHED).select_related("category")
+
+    data = {
+        'title': f'Тег: {tag.tag}',
+        'menu': menu,
+        'posts': posts,
+        'cat_selected': None,
+    }
+    return render(request, 'women/index.html', context=data)
