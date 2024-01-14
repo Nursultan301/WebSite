@@ -24,6 +24,7 @@ class Women(models.Model):
 
     title = models.CharField("Имя", max_length=255)
     slug = models.SlugField("URL", max_length=255, unique=True, db_index=True)
+    photo = models.ImageField("Фото", upload_to="photos/%Y/%m/%d", default=None, blank=True, null=True)
     content = models.TextField("Биография", blank=True)
     time_created = models.DateTimeField("Дата создание", auto_now_add=True)
     time_updated = models.DateTimeField("Дата изменение", auto_now=True)
