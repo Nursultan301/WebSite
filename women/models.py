@@ -3,11 +3,7 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 
 from common.translit import translit_to_eng
-
-
-class PublishedManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(is_published=Women.Status.PUBLISHED)
+from women.managers import PublishedManager
 
 
 class Women(models.Model):
