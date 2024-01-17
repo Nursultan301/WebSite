@@ -33,7 +33,6 @@ class WomenAdmin(admin.ModelAdmin):
     search_fields = ("title", "category__title")
     filter_horizontal = ["tags"]
     ordering = ("-time_created",)
-    # prepopulated_fields = {"slug": ("title",)}
     list_display_links = ("title",)
     list_editable = ("is_published",)
     actions = ['set_published', 'set_draft']
