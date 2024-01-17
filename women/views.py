@@ -26,38 +26,33 @@ def index(request):
 
 def detail(request, slug):
     post = get_object_or_404(Women, slug=slug)
-    print(post.category_id)
-    data = {
+    context = {
         "title": post.title,
         "menu:": menu,
         "post": post,
         "cat_selected": post.category_id
 
     }
-    return render(request, 'women/detail.html', data)
+    return render(request, 'women/detail.html', context=context)
 
 
 def about(request):
     context = {
         "title": "О нас",
-        "menu": menu
+        "menu": menu,
     }
     return render(request, 'women/about.html', context=context)
 
 
 def addpage(request):
     if request.POST:
-        form = AddPostForm(request.POST)
+        form = AddPostForm(request.POST, request.FILES)
         if form.is_valid():
-            # print(form.cleaned_data)
-            try:
-                Women.objects.create(**form.cleaned_data)
-                return redirect("home")
-            except:
-                form.add_error(None, 'Ошибка добавления поста')
-
+            form.save()
+            return redirect('home')
     else:
         form = AddPostForm()
+
     data = {
         "menu": menu,
         "title": "Добавление статьи",
